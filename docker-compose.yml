@@ -1,0 +1,33 @@
+version: '3.7'
+
+services:
+    backend:
+        container_name: smartbrain-api
+        working_dir: /usr/src/smartbrain-api
+        build: ./
+        volumes:
+            - ./:/usr/src/smartbrain-api
+        environment:
+            POSTGRES_URI: postgresql://smartbrain:letmein@localhost:5432/smartbrain-database
+        ports:
+            - '3001:3001'
+        command: npm run start-dev
+
+    database:
+        container_name: postgresql
+        build: ./postgres
+        environment:
+            POSTGRES_HOST: postgres
+            POSTGRES_DB: smartbrain-database
+            POSTGRES_USER: smartbrain
+            POSTGRES_PASSWORD: letmein
+        ports:
+            - '5432:5432'
+        restart: always
+
+    database-gui:
+        container_name: adminer
+        image: adminer
+        restart: always
+        ports:
+            - 8080:8080
